@@ -9,7 +9,8 @@
   "author": "Yogesh Kumawat",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon --watch  \"*.ts\" --exec \"ts-node\" src/app.ts",
+    "dev": "ts-node src/app.ts",
+    "dev:watch": "nodemon --watch  \"*.ts\" --exec \"ts-node\" src/app.ts",
     "build": "tsc",
     "eslint:fix": "eslint --fix"
   },
