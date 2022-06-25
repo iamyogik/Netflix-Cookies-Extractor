@@ -1,0 +1,163 @@
+{
+  "name": "Integration Webhooks, GitHub",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": 126667,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "restore": {
+          "parameters": {
+            "hook": {
+              "data": {
+                "editable": "true"
+              },
+              "label": "Netflix Cookie Webhook"
+            },
+            "maxResults": {
+              "collapsed": true
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "hook",
+            "type": "hook:gateway-webhook",
+            "label": "Webhook",
+            "required": true
+          },
+          {
+            "name": "maxResults",
+            "type": "number",
+            "label": "Maximum number of results"
+          }
+        ],
+        "interface": [
+          {
+            "name": "cookies",
+            "type": "text"
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "module": "github:ActionUpdateGist",
+      "version": 3,
+      "parameters": {
+        "account": 231490
+      },
+      "mapper": {
+        "id": "c0361df1c08b6258626debbf9f94b893",
+        "files": [
+          {
+            "content": "{{1.cookies}}",
+            "fileName": "netflix-cookies.json"
+          }
+        ],
+        "public": true,
+        "description": ""
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        },
+        "restore": {
+          "expect": {
+            "files": {
+              "mode": "chose",
+              "items": [
+                null
+              ]
+            },
+            "public": {
+              "mode": "chose"
+            }
+          },
+          "parameters": {
+            "account": {
+              "data": {
+                "scoped": "undefined",
+                "connection": "undefined"
+              },
+              "label": "My GitHub connection"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "account",
+            "type": "account:github",
+            "label": "Connection",
+            "required": true
+          }
+        ],
+        "expect": [
+          {
+            "name": "id",
+            "type": "text",
+            "label": "Gist ID",
+            "required": true
+          },
+          {
+            "name": "files",
+            "spec": [
+              {
+                "name": "fileName",
+                "type": "text",
+                "label": "File name",
+                "required": true
+              },
+              {
+                "name": "content",
+                "type": "text",
+                "label": "Content",
+                "required": true
+              }
+            ],
+            "type": "array",
+            "label": "Files"
+          },
+          {
+            "name": "public",
+            "type": "boolean",
+            "label": "This gist is public."
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "label": "Description"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "us1.make.com"
+  }
+}
