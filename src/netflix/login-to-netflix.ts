@@ -4,7 +4,7 @@ import { config } from '../utils/config'
 export const loginToNetflix = async () => {
    const { email, password } = config.netflixAuthDetails
 
-   const { page } = await getBrowser({ headless: true })
+   const { page, browser } = await getBrowser({ headless: true })
    await page.goto('https://www.netflix.com/in/login')
 
    await page.waitForSelector('[name=userLoginId]')
@@ -16,9 +16,15 @@ export const loginToNetflix = async () => {
 
    await page.click('button[data-uia=login-submit-button]')
 
-   await page.waitForSelector('.list-profiles', {
-      timeout: config.timeout,
-   })
+   await page.waitForNavigation({ waitUntil: 'networkidle2' })
+
+   const url = page.url()
+
+   if (!url.includes('browse')) {
+      await browser.close()
+      throw new Error('Could not log you in. May be auth details in wrong')
+   }
+
    const cookies = await page.cookies()
 
    const formatCookies = cookies.map((c: any) => {
@@ -41,6 +47,8 @@ export const loginToNetflix = async () => {
    const onlyReqCookies = formatCookies.filter(
       (c: any) => c.name === 'SecureNetflixId' || c.name === 'NetflixId'
    )
+
+   await browser.close()
 
    return onlyReqCookies
 }
