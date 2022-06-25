@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: unyfox-dockerhub
+  namespace: default
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsiYXV0aCI6ImRXNTVabTk0T2tSaFptWnZaR2xzUURrNCJ9fX0=
+type: kubernetes.io/dockerconfigjson
+
+---
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: net-automata
+spec:
+  schedule: "*/60 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+            - name: unyfox-dockerhub
+          containers:
+          - name: net-automata
+            image: unyfox/net_automata:1.1
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure
